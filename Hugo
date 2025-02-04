@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Interativo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #282c34;
+            color: white;
+            margin: 50px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: #444;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        canvas {
+            max-width: 100%;
+        }
+        button, input {
+            margin: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            background: blue;
+            color: white;
+            cursor: pointer;
+        }
+        input {
+            width: 150px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard Interativo</h1>
+        <input type="text" id="dataLabel" placeholder="Nome dos Dados">
+        <input type="text" id="dataYears" placeholder="Anos (ex: 2020,2021,2022)">
+        <input type="text" id="dataValues" placeholder="Valores (ex: 10,20,30)">
+        <button onclick="updateManualData()">Atualizar Gráfico</button>
+        <canvas id="chart"></canvas>
+    </div>
+    
+    <script>
+        let chart;
+
+        function createChart(labels, values, labelName) {
+            const ctx = document.getElementById('chart').getContext('2d');
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: labelName || 'Dados Personalizados',
+                        data: values,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                }
+            });
+        }
+
+        function updateManualData() {
+            const labelName = document.getElementById('dataLabel').value || 'Dados Personalizados';
+            const years = document.getElementById('dataYears').value.split(',');
+            const values = document.getElementById('dataValues').value.split(',').map(Number);
+            
+            if (years.length !== values.length || values.some(isNaN)) {
+                alert("Por favor, insira anos e valores válidos e correspondentes.");
+                return;
+            }
+            
+            createChart(years, values, labelName);
+        }
+    </script>
+</body>
+</html>
